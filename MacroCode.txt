@@ -1,0 +1,35 @@
+Sub esendtable()
+Dim outlook As Object
+Dim newEmail As Object
+Dim xInspect As Object
+Dim pageEditor As Object
+
+Set outlook = CreateObject("Outlook.Application")
+Set newEmail = outlook.CreateItem(0)
+
+With newEmail
+    .To = ""
+    .CC = ""
+    .BCC = ""
+    .Subject = "Emailable Report"
+    .Body = "Please find the requested information below" & vbCrLf & "Best Regards"
+    .Display
+    
+    Set xInspect = newEmail.GetInspector
+    Set pageEditor = xInspect.WordEditor
+    
+    Sheet1.Range("A4:N17").Copy
+    
+    pageEditor.Application.Selection.Start = Len(.Body)
+    pageEditor.Application.Selection.End = pageEditor.Application.Selection.Start
+    pageEditor.Application.Selection.PasteAndFormat (wdFormatPlainText)
+    .Display
+    .Send
+    Set pageEditor = Nothing
+    Set xInspect = Nothing
+End With
+
+Set newEmail = Nothing
+Set outlook = Nothing
+
+End Sub
